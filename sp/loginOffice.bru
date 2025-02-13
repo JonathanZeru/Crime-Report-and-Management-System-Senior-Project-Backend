@@ -1,0 +1,30 @@
+meta {
+  name: loginOffice
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://188.245.210.117:3000/api/users/auth/register
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  firstName: Tesfahun
+  lastName: Tilahun
+  email: TesfahunTilahun44@gmail.com
+  phone: 0912345678
+  password: TesfahunTilahun44
+  isActive: true
+  image: @file(C:\Users\malin\OneDrive\Documents\lemi\lemi-kura-website\src\assets\tech\tesfesh.jpg)
+  officeId: 1
+  userRoleId: 1
+  type: Admin
+  kebele: 00
+  wereda: 00
+  subCity: Lemi Kura
+  city: Addis Ababa
+  country: Ethiopia
+  userName: Tesfu
+}

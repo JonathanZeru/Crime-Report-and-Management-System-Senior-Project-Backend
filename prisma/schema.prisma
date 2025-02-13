@@ -1,0 +1,414 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+generator client {
+  provider = "prisma-client-js"
+}
+model SystemAdmin {
+  firstName        String
+  lastName        String
+  email       String? @unique
+  phone       String @unique
+  userName    String @unique
+  password    String
+  kebeleIdPictureFront String
+  kebeleIdPictureBack String
+  profilePicture  String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+}
+model DeskOfficer {
+  id          Int      @id @default(autoincrement())
+  firstName        String
+  lastName        String
+  email       String @unique
+  phone       String @unique
+  userName    String @unique
+  password    String
+  kebeleIdPictureFront String
+  kebeleIdPictureBack String
+  profilePicture  String
+  user User[]
+
+  TechnicalReport TechnicalReport[]
+
+  TacticalReport TacticalReport[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+model User {
+  id          Int      @id @default(autoincrement())
+  firstName        String
+  lastName        String
+  userName    String @unique
+  password    String
+  isActive    Boolean
+  email       String? @unique
+  phone       String @unique
+  kebeleIdPictureFront String
+  kebeleIdPictureBack String
+  profilePicture  String?
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  locationId Int?
+  location       Location?         @relation(fields: [locationId], references: [id])
+
+  deskOfficerId Int?
+  deskOfficer       DeskOfficer?         @relation(fields: [deskOfficerId], references: [id])
+
+  Notification Notification[]
+  cases        Case[]                @relation("UserCases")
+
+
+  InspectorQuestionToUser InspectorQuestionToUser[]
+}
+model Location {
+  id                Int                @id @default(autoincrement())
+  uniqueName     String
+  kebele         String
+  wereda         String
+  subCity        String
+  city           String
+  country        String
+  latitude       Float?
+  longitude      Float?
+  postalCode     String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  // Relationships
+  users          User[]
+
+  Sajen Sajen[]
+
+  Inspector Inspector[]
+
+  PoliceHead PoliceHead[]
+
+  Prosecutor Prosecutor[]
+}
+model Suspects {
+  id           Int    @id @default(autoincrement())
+  fullNme    String
+  isArrested   Boolean
+
+  // Relationship with cases
+  fullNamesOfCases            Case[]   @relation("SuspectsFullNamesOfCases")
+  fullNamesOfArrestedCases    Case[]   @relation("SuspectsFullNamesOfArrestedCases")
+}
+
+model Case {
+  id                                  Int                             @id @default(autoincrement())
+  title                               String  @db.Text
+  description                         String @db.Text
+  status                              String
+  caseLevelOfCrime                        String? @default("")
+  isCrime                             Boolean                         @default(true)
+  createdAt                           DateTime                        @default(now())
+  updatedAt                           DateTime                        @updatedAt
+  userId                              Int
+  user                                User                            @relation(fields: [userId], references: [id], name: "UserCases")
+  
+  natureOfCrime                        String
+  crimeDetail                          String
+  dateReported                         DateTime
+  dateOfIncidentOccured                DateTime
+  crimeCityUniqueName                  String
+  fullNamesOfSuspects             Suspects[]                        @relation("SuspectsFullNamesOfCases")
+  fullNamesOfArrestedSuspects     Suspects[]                        @relation("SuspectsFullNamesOfArrestedCases")
+ isAssigned                           Boolean
+  isClassified                         Boolean
+  inspectorId                          Int?
+  inspector                            Inspector?                      @relation(fields: [inspectorId], references: [id])
+
+  policeHeadId                         Int?
+  policeHead                           PoliceHead?                     @relation(fields: [policeHeadId], references: [id])
+  
+  prosecutorId                        Int?
+  prosecutor                          Prosecutor?                     @relation(fields: [prosecutorId], references: [id])
+  
+  sajens            Sajen[]            @relation("CaseSajens")
+  technicalReports                    TechnicalReport[]
+  tacticalReports                     TacticalReport[]
+  Inspector                           Inspector[]                     @relation("InspectorCases")
+  
+  CaseSajen                           CaseSajen[]
+  
+  ProsecutorQuestionToPoliceHead      ProsecutorQuestionToPoliceHead[]
+  
+  PoliceHeadQuestionToInspector       PoliceHeadQuestionToInspector[]
+  
+  InspectorQuestionToSajen            InspectorQuestionToSajen[]
+
+  ProsecutorCase                       ProsecutorCase[]
+
+
+  InspectorQuestionToUser InspectorQuestionToUser[]
+
+}
+model Sajen {
+  id          Int      @id @default(autoincrement())
+  firstName        String
+  lastName        String
+  email       String? @unique
+  phone       String @unique
+  password    String
+  userName    String @unique
+  kebeleIdPictureFront String
+  kebeleIdPictureBack String
+  profilePicture  String
+
+
+  locationId Int?
+  location       Location?         @relation(fields: [locationId], references: [id])
+
+  technicalReports  TechnicalReport[]
+  tacticalReports   TacticalReport[]
+  inspectorId       Int?
+  inspector         Inspector?         @relation("InspectorSajens", fields: [inspectorId], references: [id])
+
+  CaseSajen CaseSajen[]
+
+  InspectorSajen InspectorSajen[]
+
+  InspectorQuestionToSajen InspectorQuestionToSajen[]
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+
+  Case Case[] @relation("CaseSajens")
+}
+model CaseSajen {
+  caseId  Int
+  sajenId Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  case    Case   @relation(fields: [caseId], references: [id])
+  sajen   Sajen  @relation(fields: [sajenId], references: [id])
+
+  @@id([caseId, sajenId])
+}
+model Inspector {
+   id          Int      @id @default(autoincrement())
+  firstName        String
+  lastName        String
+  email       String? @unique
+  phone       String @unique
+  userName    String @unique
+  password    String
+  kebeleIdPictureFront String
+  kebeleIdPictureBack String
+  profilePicture  String
+
+
+  locationId Int?
+  location       Location?         @relation(fields: [locationId], references: [id])
+
+  cases          Case[]        @relation("InspectorCases")
+
+  sajen          Sajen[]       @relation("InspectorSajens")
+  technicalReports TechnicalReport[]
+  tacticalReports TacticalReport[]
+
+  Case Case[]
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  InspectorSajen InspectorSajen[]
+
+  PoliceHeadQuestionToInspector PoliceHeadQuestionToInspector[]
+
+  InspectorQuestionToSajen InspectorQuestionToSajen[]
+
+  InspectorQuestionToUser InspectorQuestionToUser[]
+}
+model InspectorSajen {
+  inspectorId  Int
+  sajenId Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  inspector    Inspector   @relation(fields: [inspectorId], references: [id])
+  sajen   Sajen  @relation(fields: [sajenId], references: [id])
+
+  @@id([inspectorId, sajenId])
+}
+model PoliceHead {
+  id          Int      @id @default(autoincrement())
+  firstName        String
+  lastName        String
+  email       String? @unique
+  phone       String @unique
+  userName    String @unique
+  password    String
+  kebeleIdPictureFront String
+  kebeleIdPictureBack String
+  profilePicture  String
+
+
+  locationId Int?
+  location       Location?         @relation(fields: [locationId], references: [id])
+
+
+  Case Case[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  ProsecutorQuestionToPoliceHead ProsecutorQuestionToPoliceHead[]
+
+  PoliceHeadQuestionToInspector PoliceHeadQuestionToInspector[]
+}
+model Prosecutor {
+   id          Int      @id @default(autoincrement())
+  firstName        String
+  lastName        String
+  email       String? @unique
+  phone       String @unique
+  userName    String @unique
+  password    String
+  kebeleIdPictureFront String
+  kebeleIdPictureBack String
+  profilePicture  String
+
+
+  locationId Int?
+  location       Location?         @relation(fields: [locationId], references: [id])
+
+
+  ProsecutorCase ProsecutorCase[]
+
+  ProsecutorQuestion ProsecutorQuestionToPoliceHead[]
+
+  Case Case[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+model ProsecutorCase {
+  id                                  Int                             @id @default(autoincrement())
+  caseId                              Int
+  case                                Case                            @relation(fields: [caseId], references: [id])
+  
+  prosecutorId                        Int
+  prosecutor                          Prosecutor                      @relation(fields: [prosecutorId], references: [id])
+
+  @@unique([caseId, prosecutorId]) // Ensure unique association between case and prosecutor
+}
+model TechnicalReport {
+  id       Int      @id @default(autoincrement())
+  caseId         Int
+  reportDetails  String   @db.Text
+  reportWord     String   @db.Text
+  isDirectEyeWitness Boolean
+  isFromAccuser  Boolean
+  isFromThirdPerson Boolean
+  isFromContactThirdPerson Boolean
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deskOfficerId Int?
+  deskOfficer            DeskOfficer?     @relation(fields: [deskOfficerId], references: [id])
+  case           Case     @relation(fields: [caseId], references: [id])
+  sajenId         Int?
+  sajen           Sajen?     @relation(fields: [sajenId], references: [id])
+  inspectorId         Int?
+  inspector           Inspector?     @relation(fields: [inspectorId], references: [id])
+}
+model TacticalReport {
+  id       Int      @id @default(autoincrement())
+  caseId         Int
+  reportDetails  String   @db.Text
+  picture        String?
+  video          String?
+  audio          String?
+  pdf            String?
+  resourceName   String   @db.Text
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deskOfficerId Int?
+  deskOfficer            DeskOfficer?     @relation(fields: [deskOfficerId], references: [id])
+  case           Case     @relation(fields: [caseId], references: [id])
+  sajenId         Int?
+  sajen           Sajen?     @relation(fields: [sajenId], references: [id])
+  inspectorId         Int?
+  inspector           Inspector?     @relation(fields: [inspectorId], references: [id])
+}
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  content   String
+  read      Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model ProsecutorQuestionToPoliceHead{
+  id             Int         @id @default(autoincrement())
+  content        String
+  senderName         String?
+  receiverName       String?
+  caseId         Int
+  case           Case         @relation(fields: [caseId], references: [id])
+  
+  prosecutorId   Int
+  prosecutor     Prosecutor   @relation(fields: [prosecutorId], references: [id])
+
+  policeHeadId   Int
+  policeHead     PoliceHead   @relation(fields: [policeHeadId], references: [id])
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+model PoliceHeadQuestionToInspector{
+  id             Int         @id @default(autoincrement())
+  content        String
+  senderName         String?
+  receiverName       String?
+  caseId         Int
+  case           Case         @relation(fields: [caseId], references: [id])
+  
+  inspectorId   Int
+  inspector     Inspector   @relation(fields: [inspectorId], references: [id])
+
+  policeHeadId   Int
+  policeHead     PoliceHead   @relation(fields: [policeHeadId], references: [id])
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+model InspectorQuestionToSajen{
+  id             Int         @id @default(autoincrement())
+  content        String
+  senderName         String?
+  receiverName       String?
+  caseId         Int
+  case           Case         @relation(fields: [caseId], references: [id])
+  
+  inspectorId   Int
+  inspector     Inspector   @relation(fields: [inspectorId], references: [id])
+
+  sajenId   Int
+  sajen     Sajen   @relation(fields: [sajenId], references: [id])
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+model InspectorQuestionToUser{
+  id             Int         @id @default(autoincrement())
+  content        String
+  senderName         String?
+  receiverName       String?
+  caseId         Int
+  case           Case         @relation(fields: [caseId], references: [id])
+  
+  inspectorId   Int
+  inspector     Inspector   @relation(fields: [inspectorId], references: [id])
+
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id])
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
