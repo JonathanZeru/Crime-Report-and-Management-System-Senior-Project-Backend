@@ -87,10 +87,6 @@ Here's a brief description of the primary models within the system's database sc
 
 Contributions are welcome! Please feel free to submit a pull request or report issues.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
 ## Contact
 
 For any inquiries, please contact me Jonathan Zeru(0966274102) or submit an issue on the GitHub repository.
