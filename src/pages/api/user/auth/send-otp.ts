@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       service: 'Gmail',
       auth: {
         user: "jonathanzeru21@gmail.com",
-        pass: "isek dnxp xkms iiha", // Replace with your actual app password
+        pass: "", // Replace with your actual app password
       },
     });
 
