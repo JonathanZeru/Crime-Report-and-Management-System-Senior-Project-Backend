@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
-const SECRET_KEY = process.env.JWT_SECRET || 'Dj2T1oa2nzx0ndBQ6LRfRiGjAyL4vfipve2PCGBwZl8=';
+const SECRET_KEY = process.env.JWT_SECRET || '';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const allowedOrigin = 'http://localhost:5173'; // Replace with your frontend origin
