@@ -4,7 +4,7 @@ import formidable, { IncomingForm, File } from 'formidable';
 
 // Initialize Prisma Client
 const prisma = new PrismaClient();
-const SECRET_KEY = process.env.JWT_SECRET || 'Dj2T1oa2nzx0ndBQ6LRfRiGjAyL4vfipve2PCGBwZl8=';
+const SECRET_KEY = process.env.JWT_SECRET || '';
 
 
 export const config = {
