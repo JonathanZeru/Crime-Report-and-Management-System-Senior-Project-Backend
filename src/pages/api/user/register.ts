@@ -7,7 +7,7 @@ import path from 'path';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
-const SECRET_KEY = process.env.JWT_SECRET || 'Dj2T1oa2nzx0ndBQ6LRfRiGjAyL4vfipve2PCGBwZl8=';
+const SECRET_KEY = process.env.JWT_SECRET || '';
 
 const authenticateToken = (token: string) => {
   try {
