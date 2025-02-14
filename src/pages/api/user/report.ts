@@ -7,8 +7,8 @@ import jwt from 'jsonwebtoken';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const prisma = new PrismaClient();
-const SECRET_KEY = process.env.JWT_SECRET || 'Dj2T1oa2nzx0ndBQ6LRfRiGjAyL4vfipve2PCGBwZl8=';
-const genAI = new GoogleGenerativeAI('AIzaSyC7S7olMKO6GU9s3U9kgBhI8RBSzmR9B94');
+const SECRET_KEY = process.env.JWT_SECRET || '';AIzaSyC7S7olMKO6GU9s3U9kgBhI8RBSzmR9B94
+const genAI = new GoogleGenerativeAI('');
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
 export const config = {
